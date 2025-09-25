@@ -2,7 +2,7 @@
 
 namespace TO_DO_LIST_WepAPI.Models.TaskItemDTO;
 
-public class UpdateTaskDTO
+public class CreateTodoItemDTO
 {
     [Required]
     [StringLength(100)]
@@ -10,6 +10,5 @@ public class UpdateTaskDTO
 
     [StringLength(500)]
     public string Description { get; set; } = string.Empty;
-    public bool IsCompleted { get; set; }
     public DateTime CreatedAt { get; set; }
 }
