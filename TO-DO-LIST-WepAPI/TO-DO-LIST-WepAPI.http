@@ -1,0 +1,6 @@
+@TO_DO_LIST_WepAPI_HostAddress = http://localhost:5186
+
+GET {{TO_DO_LIST_WepAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
