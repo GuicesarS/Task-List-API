@@ -1,0 +1,43 @@
+# .gitignore para .NET
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.cache
+*.aps
+*.ncb
+*.opensdf
+*.sdf
+*.dbmdl
+*.dbproj.schemaview
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# NuGet
+packages/
+*.nupkg
+.nuget/
+
+# Entity Framework
+Migrations/
+
+# User-specific files
+*.rsuser
+*.userosscache
+
+# IDE files
+.vscode/
+.idea/
+
+# App specific
+appsettings.Development.json
+appsettings.Local.json
