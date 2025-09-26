@@ -8,115 +8,103 @@ namespace TO_DO_LIST_WepAPI.Services;
 
 public class TodoService : ITodoService
 {
-    private readonly TodoDbContext _context; // Preciso acessar o banco de dados
+    private readonly TodoDbContext _context;
     public TodoService(TodoDbContext context) => _context = context;
     public async Task<List<TodoDTO>> GetAllAsync()
     {
-        var todos = await _context.Todo_Items
-            .OrderBy(create => create.CreatedAt)
+        var todoItems = await _context.Todo_Items
+            .OrderBy(item => item.CreatedAt)
             .ToListAsync();
 
-        var listTodoDTOs = new List<TodoDTO>(); // dados que vou retornar
+        var todoDtos = new List<TodoDTO>();
 
-        foreach (var todo in todos)
+        foreach (var item in todoItems)
         {
-            listTodoDTOs.Add(new TodoDTO
-            {
-                Id = todo.Id,
-                Title = todo.Title,
-                Description = todo.Description,
-                CreatedAt = todo.CreatedAt,
-                IsCompleted = todo.IsCompleted
-            });       
+            todoDtos.Add(MapToDto(item));
         }
 
-        return listTodoDTOs;
+        return todoDtos;
     }
     public async Task<TodoDTO> GetByIdAsync(int id)
     {
-        var todoId = await _context.Todo_Items.FindAsync(id);
+        var todoItem = await _context.Todo_Items.FindAsync(id);
 
-        if(todoId == null)
+        if (todoItem == null)
             return null;
 
-        return new TodoDTO
-        {
-            Id = todoId.Id,
-            Title = todoId.Title,
-            Description = todoId.Description,
-            CreatedAt = todoId.CreatedAt,
-            IsCompleted = todoId.IsCompleted
-        };
+        return MapToDto(todoItem);
     }
     public async Task<TodoDTO> CreateAsync(CreateTodoItemDTO createTodo)
     {
-        // Antes de criar, validar os dados
+        ValidateTodoItem(createTodo.Title, createTodo.Description);
 
-        if (string.IsNullOrWhiteSpace(createTodo.Title))
-            throw new ArgumentException("Title is required");
-
-        if (createTodo.Title.Length > 100)
-            throw new ArgumentException("Title must be less than 100 characters");
-
-        if (string.IsNullOrWhiteSpace(createTodo.Description))
-            throw new ArgumentException("Description is required");
-
-        var todo = new TodoItem
+        var todoItem = new TodoItem
         {
-            Title = createTodo.Title,
-            Description = createTodo.Description,
-            CreatedAt = createTodo.CreatedAt,
+            Title = createTodo.Title.Trim(),
+            Description = createTodo.Description.Trim(),
+            CreatedAt = DateTime.UtcNow,
             IsCompleted = false
         };
 
-        _context.Todo_Items.Add(todo);
+        _context.Todo_Items.Add(todoItem);
         await _context.SaveChangesAsync();
 
-        return new TodoDTO
-        {
-            Id = todo.Id,
-            Title = todo.Title,
-            Description = todo.Description,
-            CreatedAt = todo.CreatedAt,
-            IsCompleted = todo.IsCompleted
-        };
+        return MapToDto(todoItem);
     }
+
     public async Task<TodoDTO> UpdateAsync(int id, UpdateTodoItemDTO updateTodo)
     {
-        var todo = await _context.Todo_Items.FindAsync(id);
+        var todoItem = await _context.Todo_Items.FindAsync(id);
 
-        if (todo == null)
+        if (todoItem == null)
             return null;
 
-        if (string.IsNullOrWhiteSpace(updateTodo.Title))
-            throw new ArgumentException("Title is required");
+        ValidateTodoItem(updateTodo.Title, updateTodo.Description);
 
-        todo.Title = updateTodo.Title;
-        todo.Description = updateTodo.Description;
-        todo.IsCompleted = updateTodo.IsCompleted;
+        todoItem.Title = updateTodo.Title.Trim();
+        todoItem.Description = updateTodo.Description.Trim();
+        todoItem.IsCompleted = updateTodo.IsCompleted;
 
         await _context.SaveChangesAsync();
 
-        return new TodoDTO
-        {
-            Id = todo.Id,
-            Title = todo.Title,
-            Description = todo.Description,
-            CreatedAt = todo.CreatedAt,
-            IsCompleted = todo.IsCompleted
-        };
+        return MapToDto(todoItem);
     }
     public async Task<bool> DeleteAsync(int id)
     {
-        var todo = _context.Todo_Items.Find(id);
+        var todoItem = await _context.Todo_Items.FindAsync(id);
 
-        if (todo == null)
+        if (todoItem == null)
             return false;
 
-        _context.Todo_Items.Remove(todo);
-
+        _context.Todo_Items.Remove(todoItem);
         await _context.SaveChangesAsync();
 
         return true;
+    }
+
+    // Método privado para centralizar validações
+    private void ValidateTodoItem(string title, string description)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+            throw new ArgumentException("Title is required");
+
+        if (title.Length > 100)
+            throw new ArgumentException("Title must be less than 100 characters");
+
+        if (string.IsNullOrWhiteSpace(description))
+            throw new ArgumentException("Description is required");
+    }
+
+    // Método privado para eliminar código repetido 
+    private TodoDTO MapToDto(TodoItem item)
+    {
+        return new TodoDTO
+        {
+            Id = item.Id,
+            Title = item.Title,
+            Description = item.Description,
+            CreatedAt = item.CreatedAt,
+            IsCompleted = item.IsCompleted
+        };
     }
 }

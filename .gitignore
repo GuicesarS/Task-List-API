@@ -27,8 +27,6 @@ packages/
 *.nupkg
 .nuget/
 
-# Entity Framework
-Migrations/
 
 # User-specific files
 *.rsuser
