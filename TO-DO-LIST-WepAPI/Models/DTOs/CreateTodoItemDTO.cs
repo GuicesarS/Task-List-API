@@ -11,4 +11,5 @@ public class CreateTodoItemDTO
     [StringLength(500)]
     public string Description { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; }
+    public bool IsCompleted { get; set; }
 }
