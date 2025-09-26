@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TO-DO-LIST-WepAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+409b6d3a898bd2479b8ca1824082903b1d63fcee")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3f7608c810661b86c84c2236c4340da3c4094cdd")]
 [assembly: System.Reflection.AssemblyProductAttribute("TO-DO-LIST-WepAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TO-DO-LIST-WepAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
